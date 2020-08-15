@@ -1,15 +1,32 @@
 import requests
+import GameOneCrawler.Players
 from bs4 import BeautifulSoup
 
-url = "http://www.gameone.kr/locker/record/sum?group_code=D93C03B937A50884CFE8E9DC83109966&season=2019"
-req = requests.get(url)
-html = req.text
-soup = BeautifulSoup(html, 'html.parser')
+from GameOneCrawler.Players import Players
 
-titles_html = soup.select(".score_record > ul li span.title")
-scores_html = soup.select(".score_record > ul li span.score")
-titles = [title.text for title in titles_html]
-scores = [record.text for record in scores_html]
+team_url = "http://www.gameone.kr/club/info/player?club_idx=13457"
+player_url = "http://www.gameone.kr/locker/record/sum"
+startYear = 2018
+endYear = 2019
 
-records = dict(zip(titles, scores))
-print(records)
+players = Players.get_players(team_url)
+group_code = '3D6307527DE36B0FF0992CA9C8F9F3B3'
+total_records = dict()
+for year in range(startYear, endYear + 1):
+    records = dict()
+    for name, group_code in players.items():
+        url = player_url + "?group_code=" + group_code + "&season=" + str(year)
+        soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+
+        titles_html = soup.select(".score_record > ul li span.title")
+        scores_html = soup.select(".score_record > ul li span.score")
+        titles = [title.text for title in titles_html]
+        scores = [score.text for score in scores_html]
+        len(titles_html)
+        record = dict(zip(titles[:28], scores[:28])) # only hitter record
+
+        print(name + ":" + record)
+        records[name] = record
+    total_records[year] = records
+
+print(total_records)
