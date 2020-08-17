@@ -1,4 +1,5 @@
 import requests
+import json
 from bs4 import BeautifulSoup
 from GameOneCrawler.Players import Players
 
@@ -27,3 +28,6 @@ for year in range(startYear, endYear + 1):
     total_records[year] = records
 
 print(total_records)
+
+with open("./ninegunners-" + str(startYear) + "-" + str(endYear) + ".json", "w", encoding='utf-8') as json_file:
+    json.dump(total_records, json_file, ensure_ascii=False)
