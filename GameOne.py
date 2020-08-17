@@ -18,9 +18,10 @@ for year in range(startYear, endYear + 1):
 
         titles_html = soup.select(".score_record > ul li span.title")
         scores_html = soup.select(".score_record > ul li span.score")
+
         titles = [title.text for title in titles_html]
         scores = [score.text for score in scores_html]
-        len(titles_html)
+
         record = dict(zip(titles[:28], scores[:28]))  # only hitter record
         records[name] = record
     total_records[year] = records
